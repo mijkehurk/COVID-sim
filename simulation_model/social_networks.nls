@@ -88,7 +88,7 @@ to-report my-friends
 end
 
 to-report my-network
-  report (turtle-set my-relatives my-colleagues my-friends)
+  report (turtle-set my-relatives my-friends)
 end
 
 to-report people-that-depend-on-me
