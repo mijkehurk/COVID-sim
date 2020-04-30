@@ -105,7 +105,7 @@ BUTTON
 105
 165
 go
-go\nif not any? people with [is-contagious?]\n[stop]
+go\nif ticks > 250\n[stop]
 T
 1
 T
@@ -613,7 +613,7 @@ SWITCH
 222
 log?
 log?
-1
+0
 1
 -1000
 
@@ -3643,7 +3643,7 @@ SWITCH
 1458
 is-tracking-app-testing-immediately-recursive?
 is-tracking-app-testing-immediately-recursive?
-0
+1
 1
 -1000
 
@@ -3740,7 +3740,7 @@ SWITCH
 266
 log-preferred-activity-decision?
 log-preferred-activity-decision?
-1
+0
 1
 -1000
 
@@ -8471,6 +8471,24 @@ setup</setup>
     </enumeratedValueSet>
     <enumeratedValueSet variable="#days-trigger-school-closing-measure">
       <value value="10000"/>
+    </enumeratedValueSet>
+  </experiment>
+  <experiment name="S10-social-distancing" repetitions="10" runMetricsEveryStep="true">
+    <setup>load-scenario-7-cultural-model
+setup</setup>
+    <go>go</go>
+    <final>output-print (word "Execution of run " behaviorspace-run-number " finished in " timer " seconds")</final>
+    <timeLimit steps="500"/>
+    <metric>#infected</metric>
+    <enumeratedValueSet variable="load-country-specific-settings">
+      <value value="&quot;Custom&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="preset-scenario">
+      <value value="&quot;default-scenario&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="individualism-versus-collectivism">
+      <value value="35"/>
+      <value value="65"/>
     </enumeratedValueSet>
   </experiment>
 </experiments>

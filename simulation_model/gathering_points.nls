@@ -69,7 +69,7 @@ to-report is-alone-at? [gp]
 end 
 
 to-report is-working-at-home?
-  report is-working? and is-at-home?
+  report is-working-day-for-me? and is-at-home?
 end
 
 to-report ratio-sick-personnel

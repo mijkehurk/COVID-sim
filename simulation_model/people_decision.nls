@@ -2,7 +2,7 @@ __includes ["need_management.nls" "country_specific_features/cultural_model.nls"
 
 ;reports a string, which can be related to a gathering point and a concrete activity
 to-report my-preferred-available-activity-descriptor 
-  if log-preferred-activity-decision? [ log-file-print (sentence "Person " who " " age)]
+  if log-preferred-activity-decision? [log-file-print (sentence "Person " who " " age) log-file-print (sentence "Conformity satisfaction level: " conformity-satisfaction-level) log-file-print (sentence "Belonging satisfaction level: " belonging-satisfaction-level)]
   report item 0 reduce [[x y] -> ifelse-value item 1 x > item 1 y [x] [y]] (map [x -> (list x (global-prevalence-of x))] my-available-activity-descriptors)
   ;report reduce [[x y] -> ifelse-value global-prevalence-of x > global-prevalence-of y [x] [y]] my-available-activity-descriptors
 end
@@ -18,6 +18,10 @@ to-report is-working-day-for-me?
   ]
   
   error (sentence "wrong user of this function" self [age] of self)
+end
+
+to-report is-weekend?
+  report (day-of-the-week = "sunday") or (day-of-the-week = "saturday")
 end
 
 to-report is-shops-open-today?
@@ -102,26 +106,31 @@ to update-memory
 
   
   
-  set did-my-network-socially-distance? 2 * count (my-network with [is-I-apply-social-distancing?]) >= count my-network 
   
-  let colleague-activity []
-  if working-day? and is-worker? and count my-colleagues with [is-working?] > 0[
+    let colleague-activity ifelse-value length what-my-colleagues-did-week-day > 0 [last what-my-colleagues-did-week-day][[]]
+  if is-working-day-for-me? and is-worker? and count my-colleagues with [is-working-day-for-me?] > 0 and (slice-of-the-day = "morning" or slice-of-the-day = "afternoon")[
     
     let colleagues-at-home my-colleagues with [is-working-at-home?]
-    let colleagues-at-work my-colleagues with [is-working-at-work?]
-    ifelse count colleagues-at-home > count colleagues-at-work 
+    let colleagues-at-work my-colleagues with [is-at-work?]
+    if count colleagues-at-home > count colleagues-at-work
        [let p one-of colleagues-at-home 
         set colleague-activity list [[gathering-type] of current-activity] of p [current-motivation] of p ]
+    if count colleagues-at-work > count colleagues-at-home
        [let p one-of colleagues-at-work
         set colleague-activity list [[gathering-type] of current-activity] of p [current-motivation] of p ]
-
     
+      
     
-    set what-my-colleagues-did-week-day lput colleague-activity what-my-colleagues-did-week-day
+      if not (colleague-activity = [])[set what-my-colleagues-did-week-day lput colleague-activity what-my-colleagues-did-week-day
+  
     if length what-my-colleagues-did-week-day > 4 [
       set what-my-colleagues-did-week-day but-first what-my-colleagues-did-week-day
     ]
-  ]
+      ]
   ]
   
+
+    
+  ]
+
 end
