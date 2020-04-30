@@ -255,6 +255,7 @@ to-report SUE-compliance [ad]
 
   if (motive = work-motive) and is-I-have-contractual-obligations?
   [
+    
 ;    show "do your work bonus"
     if (not should-I-stay-home? and gp != my-home) [
       set bonus-compliance-to-obligation bonus-compliance-to-obligation + 0.2
@@ -495,45 +496,62 @@ to-report SUE-health [ad]
 end
 
 to-report conformity-increase [ad network-action]
+  
   let gp location-of ad
   let motive motive-of ad
   let sd social-distancing-of ad
   let result 0
-  
+    ifelse (motive = work-motive)[
+    if is-I-have-contractual-obligations?[
+    if ;is-working-from-home-recommended? and 
+      is-allowed-to-work-from-home? [
+        ifelse gp = my-home 
+        [set result result + 0];.1]
+        [set result result - 0];.05]
+    ]
+  ]
+  ]
+  [
   if should-I-stay-home? [
     ifelse did-my-network-quarantine? = (gp = my-home or (gp = my-hospital and work-motive != motive)) [
       ; If my quarantine decision is the same as my networks
-      set result result + 0.2
+        set result result + 0;.2
      ] [
       ; If my network and I made different decisions
-      set result result - 0.2
+      set result result - 0;.2
     ]
   ]
   
   ifelse [gathering-type] of gp = location-of network-action and motive = motive-of network-action [
-    set result result + 0.4
+  set result result + 0;.4
   ] [
     if [gathering-type] of gp = location-of network-action [
-      set result result + 0.15
+  set result result + 0;.15
     ]
     if motive = motive-of network-action [
-      set result result + 0.15
+  set result result + 0;.15
     ]
   ]
-  
+    
   ifelse sd = did-my-network-socially-distance? [
-    set result result + 0.1
+      set result result + 0;.1
   ] [
-    set result result - 0.1
+    set result result - 0;.1
   ]
-
+  ]
   if result > 1 [ set result 1 ]
+  
   report result
 end
 
 to-report SUE-conformity [ad]
   if not any? my-network [report 1]
-  let relevant-memory ifelse-value is-working-day-for-me? [what-my-network-did-week-day] [what-my-network-did-weekend]
+
+  let relevant-memory ifelse-value is-working-day-for-me? [what-my-colleagues-did-week-day] [ifelse-value not is-weekend? [what-my-network-did-week-day][what-my-network-did-weekend]]
+
+  ;; relevant-memory if is-working-motive? -> colleagues-network
+  
+
   if length relevant-memory >= 4 [
     report conformity-increase ad (first relevant-memory)
   ]
@@ -541,9 +559,16 @@ to-report SUE-conformity [ad]
 end
 
 to-report SUA-conformity [ad]
-  if not any? my-network [report 1]
-  let relevant-memory ifelse-value is-working-day-for-me? [what-my-network-did-week-day] [what-my-network-did-weekend]
-  report conformity-increase ad (last relevant-memory)
+
+  if not any? my-network [report 0.1]
+
+  ;;change relevant-memory with colleagues
+  let relevant-memory ifelse-value is-working-day-for-me? [what-my-network-did-week-day][what-my-network-did-weekend]
+  if length relevant-memory >= 4 [
+        report conformity-increase ad (last relevant-memory)
+  ]
+  report 0.1
+
 end
 
 to-report global-prevalence-of [ad]
@@ -570,37 +595,46 @@ to-report global-prevalence-of [ad]
     (SDE-luxury ad * importance-weight-luxury) 
     (SDE-leisure ad * importance-weight-leisure)) 
   
-  if log-preferred-activity-decision? [log-file-print (sentence "Global prevalence of:" [gathering-type] of location-of ad " " motive-of ad " " social-distancing-of ad " " total-satisfaction)]
+  if log-preferred-activity-decision? [
+    log-file-print (sentence "Global prevalence of:" [gathering-type] of location-of ad " " motive-of ad " " social-distancing-of ad " " total-satisfaction)
+    log-file-print (sentence "Conformity:" (SDE-conformity ad * importance-weight-conformity))
+    log-file-print (sentence "Conformity:" (SDE-belonging ad * importance-weight-belonging-subneed))
+      log-file-print (sentence "Network:" count my-network)
+    log-file-print (sentence "Social-distancing" did-my-network-socially-distance?)
+ 
+  ]
   report total-satisfaction
   
 end
 
 to debug-global-prevalence-of [ad]
   if log? [
-    debug-print (sentence [gathering-type] of (location-of ad) " " motive-of ad " " social-distancing-of ad) 
-      ;Survival needs
-    debug-print (word "  Food Safety:" (SDE-food-safety ad * importance-weight-food-safety))
-    debug-print (word "  Financial-survival:" (SDE-financial-survival ad * importance-weight-financial-survival))
-    debug-print (word "  Sleep:" (SDE-sleep ad * importance-weight-sleep))
-    debug-print (word "  Health:" (SDE-health ad * importance-weight-health))
-    debug-print (word "  Conformity:" (SDE-conformity ad * importance-weight-conformity))
-      ;Safety needs
-    debug-print (word "  Compliance:" (SDE-compliance ad * importance-weight-compliance))
-    debug-print (word "  Risk Avoidance:" (SDE-risk-avoidance ad * importance-weight-risk-avoidance))
-    debug-print (word "  Financial Stability:" (SDE-financial-stability ad * importance-weight-financial-stability))
-      ;Belonging needs
-    debug-print (word "  Belonging:" (SDE-belonging ad * importance-weight-belonging-subneed))
-      ;Esteem needs
-    debug-print (word "  Autonomy:" (SDE-autonomy ad * importance-weight-autonomy))
-    debug-print (word "  Luxury:" (SDE-luxury ad * importance-weight-luxury))
-    debug-print (word "  Leisure:" (SDE-leisure ad * importance-weight-leisure))
     
-    debug-print (word " Global:" global-prevalence-of ad)
+    log-file-print (sentence [gathering-type] of (location-of ad) " " motive-of ad " " social-distancing-of ad) 
+      ;Survival needs
+    log-file-print (word "  Food Safety:" (SDE-food-safety ad * importance-weight-food-safety))
+    log-file-print (word "  Financial-survival:" (SDE-financial-survival ad * importance-weight-financial-survival))
+    log-file-print (word "  Sleep:" (SDE-sleep ad * importance-weight-sleep))
+    log-file-print (word "  Health:" (SDE-health ad * importance-weight-health))
+    log-file-print (word "  Conformity:" (SDE-conformity ad * importance-weight-conformity))
+      ;Safety needs
+    log-file-print (word "  Compliance:" (SDE-compliance ad * importance-weight-compliance))
+    log-file-print (word "  Risk Avoidance:" (SDE-risk-avoidance ad * importance-weight-risk-avoidance))
+    log-file-print (word "  Financial Stability:" (SDE-financial-stability ad * importance-weight-financial-stability))
+      ;Belonging needs
+    log-file-print (word "  Belonging:" (SDE-belonging ad * importance-weight-belonging-subneed))
+      ;Esteem needs
+    log-file-print (word "  Autonomy:" (SDE-autonomy ad * importance-weight-autonomy))
+    log-file-print (word "  Luxury:" (SDE-luxury ad * importance-weight-luxury))
+    log-file-print (word "  Leisure:" (SDE-leisure ad * importance-weight-leisure))
+    
+    ;log-file-print (word " Global:" global-prevalence-of ad)
   ]
 end
 
 to debug-my-preferred-available-activity-descriptor
   if log? [
+    show "CHECK" 
     foreach my-available-activity-descriptors debug-global-prevalence-of
   ]
 end

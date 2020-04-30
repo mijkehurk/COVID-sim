@@ -234,7 +234,9 @@ to setup-person [current-home l-age]
     set I-know-of-working-from-home? true
     set what-my-network-did-week-day []
     set what-my-network-did-weekend []
+    set what-my-colleagues-did-week-day []
     set did-my-network-socially-distance? false
+    set did-my-colleagues-work-from-home? false
     
     set #days-I-should-remain-in-self-quarantining 0
     set  events-to-process (list)
