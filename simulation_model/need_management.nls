@@ -501,8 +501,6 @@ to-report conformity-increase [ad network-action]
   let motive motive-of ad
   let sd social-distancing-of ad
   let result 0
-  
-  ifelse (motive = work-motive)[
     if is-I-have-contractual-obligations?[
     if is-working-from-home-recommended? and is-allowed-to-work-from-home? [
       ifelse gp = my-home 
@@ -547,9 +545,12 @@ end
 to-report SUE-conformity [ad]
 
   if not any? my-network [report 1]
-  let relevant-memory ifelse-value working-day? 
-    [ifelse-value is-worker? [what-my-colleagues-did-week-day] [what-my-network-did-week-day]] 
-    [what-my-network-did-weekend]
+
+  let relevant-memory ifelse-value is-working-day-for-me? [what-my-colleagues-did-week-day] [ifelse-value not is-weekend? [what-my-network-did-week-day][what-my-network-did-weekend]]
+
+  ;; relevant-memory if is-working-motive? -> colleagues-network
+  
+
   if length relevant-memory >= 4 [
     report conformity-increase ad (first relevant-memory)
   ]
