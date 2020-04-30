@@ -503,8 +503,6 @@ to-report conformity-increase [ad network-action]
   let motive motive-of ad
   let sd social-distancing-of ad
   let result 0
-  
-  ifelse (motive = work-motive)[
     if is-I-have-contractual-obligations?[
     if is-working-from-home-recommended? and is-allowed-to-work-from-home? [
       ifelse gp = my-home 
