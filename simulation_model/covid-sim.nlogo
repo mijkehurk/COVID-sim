@@ -102,7 +102,7 @@ BUTTON
 105
 165
 go
-go\nif not any? people with [is-contagious?]\n[stop]
+go\nif ticks > 250\n[stop]
 T
 1
 T
@@ -610,7 +610,7 @@ SWITCH
 222
 log?
 log?
-1
+0
 1
 -1000
 
@@ -1555,7 +1555,7 @@ CHOOSER
 preset-scenario
 preset-scenario
 "default-scenario" "scenario-1-zero-action-scandinavia" "scenario-1-closing-schools-and-uni" "scenario-1-work-at-home-only" "scenario-1-closing-all" "scenario-3-random-test-20" "scenario-3-app-test-60" "scenario-3-app-test-80" "scenario-3-app-test-100" "economic-scenario-1-baseline" "economic-scenario-2-infections" "economic-scenario-3-lockdown" "economic-scenario-4-wages" "app-test-scenario-5-1K" "scenario-6-default" "no-action-scandinavia-2.5K" "one-family" "scenario-9-smart-testing" "scenario-7-cultural-model"
-1
+0
 
 MONITOR
 762
@@ -2558,7 +2558,7 @@ CHOOSER
 load-country-specific-settings
 load-country-specific-settings
 "Custom" "Belgium" "Canada" "Germany" "Great Britain" "France" "Italy" "Korea South" "Netherlands" "Norway" "Spain" "Singapore" "Sweden" "U.S.A."
-4
+0
 
 SLIDER
 2815
@@ -2584,7 +2584,7 @@ individualism-vs-collectivism
 individualism-vs-collectivism
 0
 100
-89.0
+30.0
 1
 1
 NIL
@@ -3640,7 +3640,7 @@ SWITCH
 1458
 is-tracking-app-testing-immediately-recursive?
 is-tracking-app-testing-immediately-recursive?
-0
+1
 1
 -1000
 
@@ -3737,7 +3737,7 @@ SWITCH
 266
 log-preferred-activity-decision?
 log-preferred-activity-decision?
-1
+0
 1
 -1000
 
@@ -7977,6 +7977,24 @@ setup</setup>
     </enumeratedValueSet>
     <enumeratedValueSet variable="#days-trigger-school-closing-measure">
       <value value="10000"/>
+    </enumeratedValueSet>
+  </experiment>
+  <experiment name="S10-social-distancing" repetitions="10" runMetricsEveryStep="true">
+    <setup>load-scenario-7-cultural-model
+setup</setup>
+    <go>go</go>
+    <final>output-print (word "Execution of run " behaviorspace-run-number " finished in " timer " seconds")</final>
+    <timeLimit steps="500"/>
+    <metric>#infected</metric>
+    <enumeratedValueSet variable="load-country-specific-settings">
+      <value value="&quot;Custom&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="preset-scenario">
+      <value value="&quot;default-scenario&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="individualism-versus-collectivism">
+      <value value="35"/>
+      <value value="65"/>
     </enumeratedValueSet>
   </experiment>
 </experiments>
