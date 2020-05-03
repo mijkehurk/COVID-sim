@@ -106,7 +106,6 @@ to update-memory
 
   
   
-  
     let colleague-activity ifelse-value length what-my-colleagues-did-week-day > 0 [last what-my-colleagues-did-week-day][[]]
   if is-working-day-for-me? and is-worker? and count my-colleagues with [is-working-day-for-me?] > 0 and (slice-of-the-day = "morning" or slice-of-the-day = "afternoon")[
     
@@ -128,9 +127,7 @@ to update-memory
     ]
       ]
   ]
-  
 
-    
   ]
-
+  
 end
