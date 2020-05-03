@@ -80,8 +80,9 @@ to update-memory
   let network-activities new-counter
 
   if count my-network > 0 [
-    ask my-network [
-      set network-activities add-to-counter network-activities (list [gathering-type] of current-activity current-motivation)]
+  ask my-network [
+    set network-activities add-to-counter network-activities (list [gathering-type] of current-activity current-motivation)
+  ]
   
     let network-activity counter-max-value network-activities
     ifelse is-working-day-for-me? [
@@ -105,6 +106,10 @@ to update-memory
   
     let colleague-activity ifelse-value length what-my-colleagues-did-week-day > 0 [last what-my-colleagues-did-week-day][[]]
   
+
+
+    let colleague-activity ifelse-value length what-my-colleagues-did-week-day > 0 [last what-my-colleagues-did-week-day][[]]
+
   if is-working-day-for-me? and is-worker? and count my-colleagues with [is-working-day-for-me?] > 0 and (slice-of-the-day = "morning" or slice-of-the-day = "afternoon")[
     
     let colleagues-at-home my-colleagues with [is-working-at-home?]
@@ -125,6 +130,6 @@ to update-memory
     ]
       ]
   ]
-
   ]
+  
 end
