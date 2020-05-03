@@ -84,13 +84,6 @@ to update-memory
     set network-activities add-to-counter network-activities (list [gathering-type] of current-activity current-motivation)
   ]
   
-  let network-activity counter-max-value network-activities
-  ifelse working-day? [
-    set what-my-network-did-week-day lput network-activity what-my-network-did-week-day
-    if length what-my-network-did-week-day > 4 [
-      set what-my-network-did-week-day but-first what-my-network-did-week-day
-    ]
-  
     let network-activity counter-max-value network-activities
     ifelse is-working-day-for-me? [
       set what-my-network-did-week-day lput network-activity what-my-network-did-week-day

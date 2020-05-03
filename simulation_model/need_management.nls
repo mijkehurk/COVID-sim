@@ -545,6 +545,7 @@ to-report conformity-increase [ad network-action]
 end
 
 to-report SUE-conformity [ad]
+
   if not any? my-network [report 1]
   let relevant-memory ifelse-value working-day? 
     [ifelse-value is-worker? [what-my-colleagues-did-week-day] [what-my-network-did-week-day]] 
