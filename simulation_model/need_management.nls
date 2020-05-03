@@ -549,7 +549,6 @@ end
 to-report SUE-conformity [ad]
 
   if not any? my-network [report 1]
-
   let relevant-memory ifelse-value is-working-day-for-me? [what-my-colleagues-did-week-day] [ifelse-value not is-weekend? [what-my-network-did-week-day][what-my-network-did-weekend]]
   if length relevant-memory >= 4 [
     report conformity-increase ad (first relevant-memory)
