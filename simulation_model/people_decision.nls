@@ -74,22 +74,11 @@ end
 
 to update-memory
   let network-activities new-counter
-<<<<<<< HEAD
+
   if count my-network > 0 [
-    ask my-network [
-      set network-activities add-to-counter network-activities (list [gathering-type] of current-activity current-motivation)
-=======
   ask my-network [
     set network-activities add-to-counter network-activities (list [gathering-type] of current-activity current-motivation)
   ]
-  
-  let network-activity counter-max-value network-activities
-  ifelse working-day? [
-    set what-my-network-did-week-day lput network-activity what-my-network-did-week-day
-    if length what-my-network-did-week-day > 4 [
-      set what-my-network-did-week-day but-first what-my-network-did-week-day
->>>>>>> changed the conformity need satisfaction people looking at their colleagues to see if they want to work from home or not
-    ]
   
     let network-activity counter-max-value network-activities
     ifelse is-working-day-for-me? [
@@ -110,13 +99,10 @@ to update-memory
     ] [
       set did-my-network-quarantine? false
     ]
-<<<<<<< HEAD
-=======
-  ]
+
   
-  set did-my-network-socially-distance? 2 * count (my-network with [is-I-apply-social-distancing?]) >= count my-network
   
-  let quarantine-network my-network with [is-officially-asked-to-quarantine?]
+  set did-my-network-socially-distance? 2 * count (my-network with [is-I-apply-social-distancing?]) >= count my-network 
   
   let colleague-activity []
   if working-day? and is-worker? and count my-colleagues with [is-working?] > 0[
@@ -136,13 +122,6 @@ to update-memory
       set what-my-colleagues-did-week-day but-first what-my-colleagues-did-week-day
     ]
   ]
-  
-  ifelse any? quarantine-network [
-    set did-my-network-quarantine? 2 * count (quarantine-network with [is-in-quarantine?]) >= count quarantine-network
-  ] [
-    set did-my-network-quarantine? false
->>>>>>> changed the conformity need satisfaction people looking at their colleagues to see if they want to work from home or not
   ]
-  
   
 end
