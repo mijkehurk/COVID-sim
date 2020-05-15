@@ -95,6 +95,7 @@ to update-memory
 
   
   
+<<<<<<< HEAD
     let colleague-activity ifelse-value length what-my-colleagues-did-week-day > 0 [last what-my-colleagues-did-week-day][[]]
   if is-working-day-for-me? and is-worker? and count my-colleagues with [is-working-day-for-me?] > 0 and (slice-of-the-day = "morning" or slice-of-the-day = "afternoon")[
     
@@ -119,6 +120,28 @@ to update-memory
 
     
 
+=======
+  set did-my-network-socially-distance? 2 * count (my-network with [is-I-apply-social-distancing?]) >= count my-network 
+  
+  let colleague-activity []
+  if working-day? and is-worker? and count my-colleagues with [is-working?] > 0[
+    
+    let colleagues-at-home my-colleagues with [is-working-at-home?]
+    let colleagues-at-work my-colleagues with [is-working-at-work?]
+    ifelse count colleagues-at-home > count colleagues-at-work 
+       [let p one-of colleagues-at-home 
+        set colleague-activity list [[gathering-type] of current-activity] of p [current-motivation] of p ]
+       [let p one-of colleagues-at-work
+        set colleague-activity list [[gathering-type] of current-activity] of p [current-motivation] of p ]
+
+    
+    
+    set what-my-colleagues-did-week-day lput colleague-activity what-my-colleagues-did-week-day
+    if length what-my-colleagues-did-week-day > 4 [
+      set what-my-colleagues-did-week-day but-first what-my-colleagues-did-week-day
+    ]
+  ]
+>>>>>>> db6a47e1dc77ab204239556b8c0f0f766332494e
   ]
   
 end
