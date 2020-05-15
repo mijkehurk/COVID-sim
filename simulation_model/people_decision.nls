@@ -24,6 +24,10 @@ to-report is-weekend?
   report (day-of-the-week = "sunday") or (day-of-the-week = "saturday")
 end
 
+to-report is-weekend?
+  report (day-of-the-week = "sunday") or (day-of-the-week = "saturday")
+end
+
 to-report is-shops-open-today?
   report not (day-of-the-week = "sunday")
 end
@@ -104,12 +108,7 @@ to update-memory
       set did-my-network-quarantine? false
     ]
 
-  
-  
-
-
     let colleague-activity ifelse-value length what-my-colleagues-did-week-day > 0 [last what-my-colleagues-did-week-day][[]]
-
   if is-working-day-for-me? and is-worker? and count my-colleagues with [is-working-day-for-me?] > 0 and (slice-of-the-day = "morning" or slice-of-the-day = "afternoon")[
     
     let colleagues-at-home my-colleagues with [is-working-at-home?]
@@ -130,14 +129,6 @@ to update-memory
     ]
       ]
   ]
-
-  
-  ]
-
-
-    
-
-
-  ]
+]
   
 end

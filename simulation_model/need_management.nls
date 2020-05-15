@@ -506,10 +506,7 @@ to-report conformity-increase [ad network-action]
       ifelse gp = my-home 
       [set result result + 0.1]
       [set result result - 0.05]
-    ]
-  ]
-  ]
-  [
+  
   if should-I-stay-home? [
     ifelse did-my-network-quarantine? = (gp = my-home or (gp = my-hospital and work-motive != motive)) [
       ; If my quarantine decision is the same as my networks
@@ -558,10 +555,11 @@ to-report SUA-conformity [ad]
 
   if not any? my-network [report 0.1]
 
-  ;;change relevant-memory with colleagues
-  let relevant-memory ifelse-value is-working-day-for-me? [what-my-network-did-week-day][what-my-network-did-weekend]
+  let relevant-memory ifelse-value working-day? 
+    [ifelse-value is-worker? [what-my-colleagues-did-week-day] [what-my-network-did-week-day]] 
+    [what-my-network-did-weekend]
   if length relevant-memory >= 4 [
-        report conformity-increase ad (last relevant-memory)
+    report conformity-increase ad (last relevant-memory)
   ]
   report 0.1
 
