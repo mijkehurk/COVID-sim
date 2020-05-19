@@ -508,8 +508,6 @@ to-report conformity-increase [ad network-action]
       [set result result - 0.05]
     ]
   ]
-  ]
-  [
   if should-I-stay-home? [
     ifelse did-my-network-quarantine? = (gp = my-home or (gp = my-hospital and work-motive != motive)) [
       ; If my quarantine decision is the same as my networks
@@ -535,7 +533,6 @@ to-report conformity-increase [ad network-action]
       set result result + 0;.1
   ] [
     set result result - 0;.1
-  ]
   ]
   if result > 1 [ set result 1 ]
   
