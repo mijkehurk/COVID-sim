@@ -24,10 +24,6 @@ to-report is-weekend?
   report (day-of-the-week = "sunday") or (day-of-the-week = "saturday")
 end
 
-to-report is-weekend?
-  report (day-of-the-week = "sunday") or (day-of-the-week = "saturday")
-end
-
 to-report is-shops-open-today?
   report not (day-of-the-week = "sunday")
 end
@@ -84,6 +80,7 @@ to update-memory
   let network-activities new-counter
 
   if count my-network > 0 [
+  ;; Always update memory of actions, social distancing and quarantine based on person's network
   ask my-network [
     set network-activities add-to-counter network-activities (list [gathering-type] of current-activity current-motivation)
   ]
@@ -101,16 +98,19 @@ to update-memory
       ]
     ]
     set did-my-network-socially-distance? 2 * count (my-network with [is-I-apply-social-distancing?]) >= count my-network
+    
     let quarantine-network my-network with [is-officially-asked-to-quarantine?]
     ifelse any? quarantine-network [
       set did-my-network-quarantine? 2 * count (quarantine-network with [is-in-quarantine?]) >= count quarantine-network
     ] [
       set did-my-network-quarantine? false
     ]
-
-    let colleague-activity ifelse-value length what-my-colleagues-did-week-day > 0 [last what-my-colleagues-did-week-day][[]]
-  if is-working-day-for-me? and is-worker? and count my-colleagues with [is-working-day-for-me?] > 0 and (slice-of-the-day = "morning" or slice-of-the-day = "afternoon")[
-    
+  ]
+  
+  ;; Only update memory about work in case a person has to work
+  if is-I-have-contractual-obligations? and count my-colleagues with [is-I-have-contractual-obligations?] > 0[
+  let colleague-activity ifelse-value length what-my-colleagues-did-week-day > 0 [last what-my-colleagues-did-week-day][[]]
+  
     let colleagues-at-home my-colleagues with [is-working-at-home?]
     let colleagues-at-work my-colleagues with [is-at-work?]
     if count colleagues-at-home > count colleagues-at-work
@@ -118,17 +118,11 @@ to update-memory
         set colleague-activity list [[gathering-type] of current-activity] of p [current-motivation] of p ]
     if count colleagues-at-work > count colleagues-at-home
        [let p one-of colleagues-at-work
-        set colleague-activity list [[gathering-type] of current-activity] of p [current-motivation] of p ]
+        set colleague-activity list [[gathering-type] of current-activity] of p [current-motivation] of p ]    
     
-      
-    
-      if not (colleague-activity = [])[set what-my-colleagues-did-week-day lput colleague-activity what-my-colleagues-did-week-day
-  
-    if length what-my-colleagues-did-week-day > 4 [
-      set what-my-colleagues-did-week-day but-first what-my-colleagues-did-week-day
-    ]
+    if not (colleague-activity = [])[set what-my-colleagues-did-week-day lput colleague-activity what-my-colleagues-did-week-day
+    if length what-my-colleagues-did-week-day > 1 [set what-my-colleagues-did-week-day but-first what-my-colleagues-did-week-day]
       ]
-  ]
   ]
   
 end

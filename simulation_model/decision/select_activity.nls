@@ -22,7 +22,7 @@ to-report my-available-activity-descriptors
       ]
 
       if is-worker? [
-        if is-technically-feasible-to-work-from-home? and I-know-of-working-from-home? [
+        if is-technically-feasible-to-work-from-home?[; and I-know-of-working-from-home? [
           set activities (lput (activity-descriptor
             my-home
             work-motive)
@@ -82,6 +82,7 @@ end
 to select-activity
   let c-a my-preferred-available-activity-descriptor
   
+  
   ;;select if migration takes over and people move around
   if (migration? and random-float 1 < probability-going-abroad) [
     set c-a (list away-gathering-point travelling-motive false)
@@ -94,8 +95,9 @@ to select-activity
   set is-I-apply-social-distancing? social-distancing-of c-a
   if current-activity != away-gathering-point and current-motivation = travelling-motive [error "wrong place while travelling"]
   if log-violating-quarantine? [ process-quarantine-violation-event]
-  if log? [log-file-print (sentence "Applied social distancing: " is-I-apply-social-distancing?)
-           
+  if log? [log-file-print (sentence "Choosen-action" [gathering-type] of location-of c-a motive-of c-a)
+           log-file-print (sentence "Applied social distancing: " is-I-apply-social-distancing?)
+           if length what-my-colleagues-did-week-day > 0 [log-file-print (sentence "Network-worked-at-home" item 0 what-my-colleagues-did-week-day)]
            log-file-print (sentence "Importance conformity: " importance-weight-conformity)
   ]
 end
