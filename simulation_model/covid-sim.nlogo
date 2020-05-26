@@ -413,7 +413,7 @@ density-factor-essential-shops
 density-factor-essential-shops
 0
 1
-0.3
+0.5
 0.01
 1
 NIL
@@ -428,7 +428,7 @@ density-factor-non-essential-shops
 density-factor-non-essential-shops
 0
 1
-0.6
+0.84
 0.01
 1
 NIL
@@ -1038,10 +1038,10 @@ with-infected?
 -1000
 
 MONITOR
-2042
-1180
-2268
-1225
+1871
+1210
+2092
+1255
 NIL
 closed-schools?
 17
@@ -1049,10 +1049,10 @@ closed-schools?
 11
 
 SWITCH
-2043
-1140
-2265
-1173
+1870
+1102
+2092
+1135
 is-closing-school-when-any-reported-case-measure?
 is-closing-school-when-any-reported-case-measure?
 1
@@ -1075,10 +1075,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-2043
-1039
-2271
-1072
+1870
+1009
+2092
+1042
 ratio-omniscious-infected-that-trigger-school-closing-measure
 ratio-omniscious-infected-that-trigger-school-closing-measure
 0
@@ -1090,10 +1090,10 @@ NIL
 HORIZONTAL
 
 INPUTBOX
-2043
-1076
-2269
-1137
+1870
+1041
+2093
+1102
 #days-trigger-school-closing-measure
 10000.0
 1
@@ -1116,10 +1116,10 @@ NIL
 HORIZONTAL
 
 INPUTBOX
-2286
-1070
-2555
-1131
+2283
+1067
+2552
+1128
 #days-trigger-non-essential-business-closing-measure
 10000.0
 1
@@ -1602,10 +1602,10 @@ count retireds
 11
 
 TEXTBOX
-2123
-1015
-2273
-1033
+1939
+982
+2022
+1000
 Closing schools\n
 11
 105.0
@@ -1876,7 +1876,7 @@ social-distancing-density-factor
 social-distancing-density-factor
 0
 1
-0.5
+0.08
 0.01
 1
 NIL
@@ -2015,8 +2015,8 @@ true
 "" ""
 PENS
 "@Work" 1.0 0 -14070903 true "" "plot count people with [is-at-work?]"
-"@Pu-Leisure" 1.0 0 -5298144 true "" "plot count people with [is-at-public-leisure-place?]"
-"@Pr-Leisure" 1.0 0 -3844592 true "" "plot count people with [is-at-private-leisure-place?]"
+"@Pu-Leisure" 1.0 0 -2674135 true "" "plot count people with [is-at-public-leisure-place?]"
+"@Pr-Leisure" 1.0 0 -955883 true "" "plot count people with [is-at-private-leisure-place?]"
 "@Home" 1.0 0 -14439633 true "" "plot count people with [is-at-home?]"
 "@Univ" 1.0 0 -4079321 true "" "plot count people with [is-at-university?]"
 "Treated" 1.0 0 -7500403 true "" "plot count people with [current-motivation = treatment-motive]"
@@ -2206,7 +2206,7 @@ MONITOR
 2965
 1290
 #social-distancing
-count people with [is-I-apply-social-distancing? = true]
+count people with [is-I-apply-social-distancing?]
 17
 1
 11
@@ -2744,7 +2744,7 @@ ratio-of-people-using-the-tracking-app
 ratio-of-people-using-the-tracking-app
 0
 1
-0.0
+1.0
 0.01
 1
 NIL
@@ -2900,7 +2900,7 @@ INPUTBOX
 914
 87
 #random-seed
-1.0
+4.0
 1
 0
 Number
@@ -2949,7 +2949,7 @@ productivity-at-home
 productivity-at-home
 0
 2
-1.0
+1.1
 0.1
 1
 NIL
@@ -4048,6 +4048,68 @@ is-working-from-home-recommended?
 1
 1
 -1000
+
+CHOOSER
+2479
+1609
+2614
+1654
+condition-phasing-out
+condition-phasing-out
+"35 days of quarantine" "#infected has decreased since 5 days ago" "hospital not overrun & #hospitalizations has decreased since 5 days ago"
+1
+
+SWITCH
+1870
+1134
+2092
+1167
+is-closed-during-global-quarantine?
+is-closed-during-global-quarantine?
+0
+1
+-1000
+
+TEXTBOX
+2351
+1570
+2501
+1588
+Conditions for phasing out
+11
+105.0
+1
+
+MONITOR
+2625
+1609
+2834
+1654
+NIL
+current-governmental-model-phase
+17
+1
+11
+
+CHOOSER
+2333
+1609
+2479
+1654
+condition-for-acknowledging-the-crisis
+condition-for-acknowledging-the-crisis
+"ratio infected>2%"
+0
+
+CHOOSER
+1870
+1165
+2092
+1210
+force-reopening-of-schools-after-phase
+force-reopening-of-schools-after-phase
+"never" "phase-1"
+0
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -5164,7 +5226,7 @@ setup</setup>
   <experiment name="S6" repetitions="1" runMetricsEveryStep="true">
     <setup>setup</setup>
     <go>go</go>
-    <timeLimit steps="500"/>
+    <timeLimit steps="1500"/>
     <metric>#infected</metric>
     <metric>count people with [epistemic-infection-status = "infected"]</metric>
     <metric>#admissions-last-tick</metric>
@@ -5262,7 +5324,7 @@ setup</setup>
       <value value="0.6"/>
       <value value="1"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="#random-seed" first="1" step="1" last="5"/>
+    <steppedValueSet variable="#random-seed" first="1" step="1" last="10"/>
     <enumeratedValueSet variable="prioritize-testing-education?">
       <value value="false"/>
     </enumeratedValueSet>
@@ -5488,7 +5550,7 @@ setup</setup>
     <enumeratedValueSet variable="make-social-distance-profile-value-based?">
       <value value="true"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="probably-contagion-mitigation-from-social-distancing">
+    <enumeratedValueSet variable="social-distancing-density-factor">
       <value value="0.08"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="is-psychorigidly-staying-at-home-when-quarantining?">

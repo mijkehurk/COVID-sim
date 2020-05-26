@@ -7,7 +7,7 @@ people-own [
   time-when-infected
   epistemic-infection-status
   
-  ;;;
+  is-activity-successful?
   current-activity
   is-moving-outside-for-reaching-current-activity?
   current-motivation
